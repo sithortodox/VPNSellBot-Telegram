@@ -31,4 +31,4 @@ RUN adduser --disabled-password --gecos '' botuser \
  && chown -R botuser:botuser /app
 USER botuser
 
-CMD ["python main.py"]
+CMD ["python" "main.py"]
