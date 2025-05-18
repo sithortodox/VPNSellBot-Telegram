@@ -1,14 +1,16 @@
-from aiogram import Router, F
-from aiogram.types import Message
-from config import get_settings
-from keyboards.user_kb import main_menu_kb
-
-router = Router()
-
+# handlers/user/start.py
+from db.dao import get_or_create_user
+...
 @router.message(F.text == "/start")
 async def cmd_start(message: Message) -> None:
-    settings = get_settings()
-    is_admin = message.from_user.id in settings.admin_ids
+    # ← добавляем пользователя (если ещё не был)
+    await get_or_create_user(
+        tg_id=message.from_user.id,
+        username=message.from_user.username,
+        first_name=message.from_user.first_name,
+        last_name=message.from_user.last_name,
+    )
+    is_admin = message.from_user.id in get_settings().admin_ids
     await message.answer(
         "👋 Добро пожаловать!",
         reply_markup=main_menu_kb(is_admin),
