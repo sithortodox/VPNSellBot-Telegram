@@ -27,6 +27,8 @@ try:
 except ModuleNotFoundError:
     ThrottlingMiddleware = None  # type: ignore  # заглушка, если middleware ещё нет
 
+dp = Dispatcher()
+
 # Routers — импорты регистрируют команды/коллбэки
 from handlers.user.cabinet import router as cabinet_router
 dp.include_router(cabinet_router)
@@ -47,7 +49,6 @@ async def run() -> None:  # pragma: no cover — точка входа
         token=settings.bot_token,
         default=DefaultBotProperties(parse_mode=ParseMode.HTML),
     )
-    dp = Dispatcher()
 
     # Подключаем middlewares, если они доступны
     if ThrottlingMiddleware:
