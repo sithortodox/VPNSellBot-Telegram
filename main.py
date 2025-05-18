@@ -28,6 +28,8 @@ except ModuleNotFoundError:
     ThrottlingMiddleware = None  # type: ignore  # заглушка, если middleware ещё нет
 
 # Routers — импорты регистрируют команды/коллбэки
+from handlers.user.cabinet import router as cabinet_router
+dp.include_router(cabinet_router)
 from handlers.user.start import router as start_router  # noqa: WPS433,E402
 from handlers.user.balance import router as balance_router  # noqa: WPS433,E402
 from handlers.admin.panel import router as admin_panel_router  # noqa: WPS433,E402
