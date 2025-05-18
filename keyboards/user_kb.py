@@ -1,39 +1,71 @@
-"""keyboards/user_kb.py — inline‑клавиатуры для пользователей
-===========================================================
-Создаёт главное меню (Service X, Balance). При флаге `is_admin=True`
-добавляет кнопку «Admin Panel» — чтобы не дублировать код.
+# """keyboards/user\_kb.py — inline‑клавиатуры для пользователей
+
+Главное меню: «Личный кабинет», «Баланс» и (для админов) «Панель администратора».
+Подменю «Личный кабинет» содержит:
+• История покупок / Мои конфиги
+• Мой баланс / Пополнить
+• Реферальная программа
 """
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.types import InlineKeyboardMarkup
 
-__all__ = [
-    "CallbackData",
-    "main_menu_kb",
+**all** = \[
+"CallbackData",
+"main\_menu\_kb",
+"cabinet\_menu\_kb",
 ]
 
 # -----------------------------------------------------------------
-# Callback data константы (используются в handlers)
+
+# Callback data константы
+
 # -----------------------------------------------------------------
 
 class CallbackData:
-    SERVICE_X = "service_x"
-    BALANCE = "balance"
-    ADMIN_PANEL = "admin_panel"
+\# Главное меню
+CABINET = "cabinet"
+BALANCE = "balance"       # остаётся для прямого вызова кнопки «Баланс»
+ADMIN\_PANEL = "admin\_panel"
 
+```
+# Подменю личного кабинета
+CABINET_HISTORY = "cabinet:history"
+CABINET_BALANCE = "cabinet:balance"
+CABINET_REFERRAL = "cabinet:referral"
+```
 
 # -----------------------------------------------------------------
-# Конструктор клавиатуры
+
+# Главное меню
+
 # -----------------------------------------------------------------
 
-def main_menu_kb(is_admin: bool = False) -> InlineKeyboardMarkup:
-    """Возвращает InlineKeyboardMarkup главного меню."""
-    kb = InlineKeyboardBuilder()
+def main\_menu\_kb(is\_admin: bool = False) -> InlineKeyboardMarkup:
+"""Inline‑меню первого уровня."""
+kb = InlineKeyboardBuilder()
 
-    kb.button(text="⚙️ Service X", callback_data=CallbackData.SERVICE_X)
-    kb.button(text="💰 Balance", callback_data=CallbackData.BALANCE)
+```
+kb.button(text="👤 Личный кабинет", callback_data=CallbackData.CABINET)
+kb.button(text="💰 Баланс", callback_data=CallbackData.BALANCE)
 
-    if is_admin:
-        kb.button(text="🛠 Admin Panel", callback_data=CallbackData.ADMIN_PANEL)
+if is_admin:
+    kb.button(text="🛠 Панель администратора", callback_data=CallbackData.ADMIN_PANEL)
 
-    kb.adjust(1)  # по одной кнопке в строке
-    return kb.as_markup()
+kb.adjust(1)
+return kb.as_markup()
+```
+
+# -----------------------------------------------------------------
+
+# Подменю «Личный кабинет»
+
+# -----------------------------------------------------------------
+
+def cabinet\_menu\_kb() -> InlineKeyboardMarkup:
+"""Возвращает клавиатуру раздела «Личный кабинет»."""
+kb = InlineKeyboardBuilder()
+kb.button(text="📝 История покупок / Мои конфиги", callback\_data=CallbackData.CABINET\_HISTORY)
+kb.button(text="💰 Мой баланс / Пополнить", callback\_data=CallbackData.CABINET\_BALANCE)
+kb.button(text="👥 Реферальная программа", callback\_data=CallbackData.CABINET\_REFERRAL)
+kb.adjust(1)
+return kb.as\_markup()
