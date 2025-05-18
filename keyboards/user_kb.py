@@ -1,4 +1,4 @@
-"""keyboards/user\_kb.py — inline keyboards for user-facing menus.
+"""keyboards.user\_kb — inline keyboards for user-facing menus.
 
 Main menu:
 • 👤 Личный кабинет
@@ -10,8 +10,8 @@ Cabinet submenu:
 • 💰 Мой баланс / Пополнить
 • 👥 Реферальная программа
 """
-from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.types import InlineKeyboardMarkup
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 **all** = (
 "CallbackData",
@@ -20,7 +20,7 @@ from aiogram.types import InlineKeyboardMarkup
 )
 
 class CallbackData:
-"""Callback-data constants used across handlers."""
+"""Centralised callback-data constants."""
 
 ```
 # Main menu
@@ -34,42 +34,42 @@ CABINET_BALANCE = "cabinet:balance"
 CABINET_REFERRAL = "cabinet:referral"
 ```
 
-# -----------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 # Main menu keyboard
 
-# -----------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 def main\_menu\_kb(is\_admin: bool = False) -> InlineKeyboardMarkup:
 """Return inline keyboard for the main menu."""
-builder = InlineKeyboardBuilder()
-builder.button(text="👤 Личный кабинет", callback\_data=CallbackData.CABINET)
-builder.button(text="💰 Баланс", callback\_data=CallbackData.BALANCE)
+kb = InlineKeyboardBuilder()
+kb.button(text="👤 Личный кабинет", callback\_data=CallbackData.CABINET)
+kb.button(text="💰 Баланс", callback\_data=CallbackData.BALANCE)
 if is\_admin:
-builder.button(text="🛠 Панель администратора", callback\_data=CallbackData.ADMIN\_PANEL)
-builder.adjust(1)
-return builder.as\_markup()
+kb.button(text="🛠 Панель администратора", callback\_data=CallbackData.ADMIN\_PANEL)
+kb.adjust(1)
+return kb.as\_markup()
 
-# -----------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 # Cabinet submenu keyboard
 
-# -----------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 def cabinet\_menu\_kb() -> InlineKeyboardMarkup:
 """Return inline keyboard for the cabinet submenu."""
-builder = InlineKeyboardBuilder()
-builder.button(
+kb = InlineKeyboardBuilder()
+kb.button(
 text="📝 История покупок / Мои конфиги",
 callback\_data=CallbackData.CABINET\_HISTORY,
 )
-builder.button(
+kb.button(
 text="💰 Мой баланс / Пополнить",
 callback\_data=CallbackData.CABINET\_BALANCE,
 )
-builder.button(
+kb.button(
 text="👥 Реферальная программа",
 callback\_data=CallbackData.CABINET\_REFERRAL,
 )
-builder.adjust(1)
-return builder.as\_markup()
+kb.adjust(1)
+return kb.as\_markup()
