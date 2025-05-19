@@ -1,19 +1,25 @@
-# requirements.txt — pinned python packages for ReputMail Bot
+# Telegram bot framework
+aiogram>=3.3,<4.0
 
-# ---------------------------------------------------------
+# Async ORM and PostgreSQL driver
+SQLAlchemy>=1.4,<2.0
+asyncpg>=0.26,<1.0
 
-# Основные
+# Environment variable loader
+python-dotenv>=0.21.0
 
-aiogram==3.4.1          # Telegram Bot API framework (async, typing-friendly)
-SQLAlchemy==2.0.30      # ORM + Core 2.0
-python-dotenv==1.0.1    # .env loader
-asyncpg==0.29.0         # Async PostgreSQL driver
-aiosqlite==0.20.0       # Async SQLite driver (dev/test)
+# Database migrations
+alembic>=1.10.0
 
-# Dev / tooling (необязательно, но полезно — можно удалить при прод-сборке)
+# Typed settings
+pydantic>=1.10.2
 
-pytest==8.1.1           # тесты
-pytest-asyncio==0.23.6  # async tests support
-black==24.4.2           # formatter
-isort==5.13.2           # import sorter
-mypy==1.10.0            # static typing
+# (Optional) High-performance event loop
+uvloop>=0.17.0
+
+# Utilities
+cachetools>=5.3.0
+
+# Testing (if you intend to run tests)
+pytest>=7.2.0
+pytest-asyncio>=0.20.0
