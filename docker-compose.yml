@@ -1,39 +1,26 @@
-# docker-compose.yml — запуск ReputMail Bot + PostgreSQL
-# ------------------------------------------------------
-version: '3.9'
+version: '3.8'
 
 services:
+  db:
+    image: postgres:14-alpine
+    restart: unless-stopped
+    environment:
+      # Эти значения должны совпадать с теми, что вы прописали в DATABASE_URL
+      POSTGRES_USER: vpnsell_user
+      POSTGRES_PASSWORD: vpnsell_pass
+      POSTGRES_DB: vpnsell
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
   bot:
     build: .
-    container_name: reputmail_bot
-    restart: always
-    env_file:
-      - .env               # BOT_TOKEN, DATABASE_URL, ADMIN_IDS
+    env_file: .env
+    restart: unless-stopped
     depends_on:
       - db
-    volumes:
-      - .:/app             # hot‑reload кода при dev‑запуске
-    healthcheck:
-      test: ["CMD", "python", "-c", "import requests, os, sys; import time; url=f'https://api.telegram.org/bot{os.environ.get(\"BOT_TOKEN\")}/getMe'; sys.exit(0 if requests.get(url).ok else 1)"]
-      interval: 1m
-      timeout: 10s
-      retries: 3
-
-  db:
-    image: postgres:16-alpine
-    container_name: reputmail_db
-    restart: always
-    environment:
-      POSTGRES_DB: reputmail
-      POSTGRES_USER: reputmail
-      POSTGRES_PASSWORD: reputmail
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
-      interval: 30s
-      timeout: 5s
-      retries: 5
+    # если хотите подключить локальный каталог для разработки:
+    # volumes:
+    #   - .:/app
 
 volumes:
-  postgres_data:
+  db_data:
