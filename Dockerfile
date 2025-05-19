@@ -1,34 +1,29 @@
-# Dockerfile — ReputMail Bot
-# -------------------------
-# Multi‑stage image: builder installs deps into layer, final stage is minimal.
+# Use official Python runtime as a base image
+FROM python:3.11-slim
 
-FROM python:3.12-slim AS builder
+# Ensure stdout and stderr are unbuffered
+ENV PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1
+
+# Set working directory
 WORKDIR /app
 
-# Faster installs + no cache clutter
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+# Install system dependencies (if you later use psycopg2, uncomment libpq-dev)
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+       build-essential \
+    && rm -rf /var/lib/apt/lists/*
 
+# Install Python dependencies
 COPY requirements.txt .
 RUN pip install --upgrade pip \
- && pip install --user -r requirements.txt
+    && pip install -r requirements.txt
 
-# ───────────────────────────────────────────────────────────────
-FROM python:3.12-slim
-WORKDIR /app
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    PATH="/root/.local/bin:$PATH"
-
-# copy installed libs from builder
-COPY --from=builder /root/.local /root/.local
-
-# copy project files
+# Copy the rest of the application code
 COPY . .
 
-# non‑root user (uid 1001)
-RUN adduser --disabled-password --gecos '' botuser \
- && chown -R botuser:botuser /app
-USER botuser
+# If you need migrations, you can run:
+# RUN alembic upgrade head
 
-CMD ["python" "main.py"]
+# Default command to run the bot
+CMD ["python", "-m", "vpnsellbot.main"]
