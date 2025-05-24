@@ -1,26 +1,21 @@
-version: '3.8'
-
 services:
-  db:
-    image: postgres:14-alpine
-    restart: unless-stopped
+  bot:
+    build: .
+    command: >
+      sh -c "
+      python scripts/init_db.py &&
+      python -m vpnsellbot.main"
     environment:
-      # Эти значения должны совпадать с теми, что вы прописали в DATABASE_URL
-      POSTGRES_USER: vpnsell_user
-      POSTGRES_PASSWORD: vpnsell_pass
+      - DATABASE_URL=${DATABASE_URL}
+    depends_on:
+      - db
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
       POSTGRES_DB: vpnsell
     volumes:
       - db_data:/var/lib/postgresql/data
-
-  bot:
-    build: .
-    env_file: .env
-    restart: unless-stopped
-    depends_on:
-      - db
-    # если хотите подключить локальный каталог для разработки:
-    # volumes:
-    #   - .:/app
-
 volumes:
   db_data:
